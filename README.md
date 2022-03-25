@@ -1,1 +1,0 @@
-# SDavidtralak.github.io
