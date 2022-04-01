@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
+const contact_1 = __importDefault(require("../Models/contact"));
 router.get('/', function (req, res, next) {
     res.render('index', { title: 'Home', page: 'home', displayName: '' });
 });
@@ -12,28 +13,84 @@ router.get('/home', function (req, res, next) {
     res.render('index', { title: 'Home', page: 'home', displayName: '' });
 });
 router.get('/about', function (req, res, next) {
-    res.render('index', { title: 'about us', page: 'about ', displayName: '' });
+    res.render('index', { title: 'About Us', page: 'about', displayName: '' });
 });
-router.get('/Services', function (req, res, next) {
-    res.render('index', { title: 'Services', page: 'Services ', displayName: '' });
+router.get('/services', function (req, res, next) {
+    res.render('index', { title: 'Our Services', page: 'services', displayName: '' });
 });
-router.get('/Projects', function (req, res, next) {
-    res.render('index', { title: 'Products', page: 'products ', displayName: '' });
+router.get('/products', function (req, res, next) {
+    res.render('index', { title: 'Our Products', page: 'products', displayName: '' });
 });
-router.get('/Contact', function (req, res, next) {
-    res.render('index', { title: 'Contact us', page: 'Contact  ', displayName: '' });
+router.get('/contact', function (req, res, next) {
+    res.render('index', { title: 'Contact Us', page: 'contact', displayName: '' });
 });
 router.get('/login', function (req, res, next) {
-    res.render('index', { title: 'login', page: 'login  ', displayName: '' });
+    res.render('index', { title: 'Login', page: 'login', displayName: '' });
 });
 router.get('/register', function (req, res, next) {
-    res.render('index', { title: 'Register us', page: 'register  ', displayName: '' });
+    res.render('index', { title: 'Register', page: 'register', displayName: '' });
 });
 router.get('/contact-list', function (req, res, next) {
-    res.render('index', { title: 'Contact list', page: 'Contact list ', displayName: '' });
+    contact_1.default.find(function (err, contactList) {
+        if (err) {
+            console.error("Error Encountered: " + err.message);
+            res.end();
+        }
+        res.render('index', { title: 'Contact List', page: 'contact-list', contacts: contactList, displayName: '' });
+    });
 });
-router.get('/edit', function (req, res, next) {
-    res.render('index', { title: 'Edit ', page: 'edit contacts  ', displayName: '' });
+router.get('/add', function (req, res, next) {
+    res.render('index', { title: 'add', page: 'edit', contact: '', displayName: '' });
+});
+router.post('/add', function (req, res, next) {
+    let newContact = new contact_1.default({
+        "FullName": req.body.fullName,
+        "EmailAddress": req.body.emailAddress,
+        "ContactNumber": req.body.contactNumber
+    });
+    contact_1.default.create(newContact, function (err) {
+        if (err) {
+            console.error(err);
+            res.end(err);
+        }
+        res.redirect("/contact-list");
+    });
+});
+router.get('/edit/:id', function (req, res, next) {
+    let id = req.params.id;
+    contact_1.default.findById(id, {}, {}, function (err, editContact) {
+        if (err) {
+            console.error(err);
+            res.end(err);
+        }
+        res.render('index', { title: 'edit', page: 'edit', contact: editContact, displayName: '' });
+    });
+});
+router.post('/edit/:id', function (req, res, next) {
+    let id = req.params.id;
+    let Contactupdate = new contact_1.default({
+        "_id": id,
+        "FullName": req.body.fullName,
+        "EmailAddress": req.body.emailAddress,
+        "ContactNumber": req.body.contactNumber
+    });
+    contact_1.default.updateOne({ _id: id }, Contactupdate, function (err) {
+        if (err) {
+            console.error(err);
+            res.end(err);
+        }
+        res.redirect("/contact-list");
+    });
+});
+router.get('/delete/:id', function (req, res, next) {
+    let id = req.params.id;
+    contact_1.default.remove({ _id: id }, function (err) {
+        if (err) {
+            console.error(err);
+            res.end(err);
+        }
+        res.redirect("/contact-list");
+    });
 });
 exports.default = router;
 //# sourceMappingURL=index.js.map

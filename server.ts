@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-import app from './app';
+import app from './Config/app';
 import debug from 'debug';
 debug('temp:server');
 import http from 'http';
@@ -14,7 +14,7 @@ import { HttpError } from 'http-errors';
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000') as number;
 app.set('port', port);
 
 /**
@@ -35,16 +35,18 @@ server.on('listening', onListening);
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort( val: string) 
+function normalizePort(val: string)
 {
-  let port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (isNaN(port)) 
+  {
     // named pipe
     return val;
   }
 
-  if (port >= 0) {
+  if (port >= 0) 
+  {
     // port number
     return port;
   }
@@ -56,7 +58,7 @@ function normalizePort( val: string)
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error: HttpError) 
+function onError(error: HttpError) :void
 {
   if (error.syscall !== 'listen') 
   {
@@ -68,8 +70,7 @@ function onError(error: HttpError)
     : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
-  switch (error.code) 
-  {
+  switch (error.code) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
       process.exit(1);
@@ -90,6 +91,6 @@ function onError(error: HttpError)
 function onListening() 
 {
   let addr = server.address() as string;
-  let bind = 'pipe ' + addr
+  let bind = 'pipe ' + addr;
   debug('Listening on ' + bind);
 }
