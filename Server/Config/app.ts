@@ -14,17 +14,29 @@ import passport from 'passport'; // authentication middleware
 import passportLocal from 'passport-local'; // authentication strategy (username / password)
 import flash from 'connect-flash'; // auth messaging and error management
 
+//module for jwt
+import cors from 'cors';
+import passportJWT from 'passport-jwt';
+
+//jwt aliases
+let JWTstrategy = passportJWT.Strategy;
+let ExtractJWT = passportJWT.ExtractJwt;
+
+
+
 // authentication objects
 let localStrategy = passportLocal.Strategy; // alias
 
 // import a user Model
 import User from '../Models/user';
 
+
 // App configuration
 
 // Import routers
 import indexRouter from '../Routes/index';
-import usersRouter from '../Routes/users';
+import authRouter from '../Routes/auth';
+import contactListRouter from '../Routes/contact-list';
 
 const app = express();
 
@@ -54,6 +66,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../../Client')));
 app.use(express.static(path.join(__dirname, '../../node_modules')));
 
+//setup cors
+app.use(cors());
+
+
 // setup express session
 app.use(session({
   secret: DBConfig.SessionSecret,
@@ -72,11 +88,32 @@ app.use(passport.session());
 passport.use(User.createStrategy());
 
 // serialize and deserialize user data
-//passport.serializeUser(User.serializeUser());
-//passport.deserializeUser(User.deserializeUser());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+//jwt options
+let jwtOptions = 
+{
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: DBConfig.SessionSecret
+}
+
+// jwt strat config
+let strategy = new JWTstrategy(jwtOptions, function(jwt_payload, done)
+{
+  User.findById(jwt_payload.id)
+  .then(user => {
+    return done(null, user);
+  })
+  .catch(err => {
+    return done(err, false);
+  });
+})
+
+passport.use(strategy);
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', authRouter);
+app.use('/', contactListRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) 
@@ -91,9 +128,12 @@ app.use(function(err: createError.HttpError, req: express.Request, res: express.
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  let message = err.message;
+  let error =  err ;
+
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', {message: message, error: error, title: '', page: '', displayName: ''});
 });
 
 export default app;
