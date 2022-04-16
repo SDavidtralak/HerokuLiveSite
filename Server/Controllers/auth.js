@@ -9,15 +9,14 @@ const user_1 = __importDefault(require("../Models/user"));
 const index_1 = require("../Util/index");
 function DisplayLoginPage(req, res, next) {
     if (!req.user) {
-        return res.render('index', { title: 'Login', page: 'login', messages: req.flash('loginMessage'), displayName: index_1.UserDisplayName });
+        return res.render('index', { title: 'Login', page: 'login', messages: req.flash('loginMessage'), displayName: (0, index_1.UserDisplayName)(req) });
     }
     return res.redirect('/contact-list');
 }
 exports.DisplayLoginPage = DisplayLoginPage;
 function DisplayRegisterPage(req, res, next) {
     if (!req.user) {
-        return res.render('index', { title: 'Register', page: 'register', messages: req.flash('registerMessage'),
-            displayName: index_1.UserDisplayName });
+        return res.render('index', { title: 'Register', page: 'register', messages: req.flash('registerMessage'), displayName: (0, index_1.UserDisplayName)(req) });
     }
     return res.redirect('/contact-list');
 }
@@ -52,13 +51,13 @@ function ProcessRegisterPage(req, res, next) {
     user_1.default.register(newUser, req.body.password, function (err) {
         if (err) {
             if (err.name == "UserExistsError") {
-                console.error('ERROR: Inserting user');
+                console.error('ERROR: Inserting User');
                 req.flash('registerMessage', 'Registration Error');
-                console.error('ERROR: USER Already Exist');
+                console.error('ERROR: User Already Exists');
             }
-            req.flash('registerMessage', 'Registration Error');
+            req.flash('registerMessage', 'Server Failure');
             console.error(err.name);
-            return res.redirect(err.name);
+            return res.redirect('/register');
         }
         return passport_1.default.authenticate('local')(req, res, () => {
             return res.redirect('/contact-list');
@@ -68,7 +67,7 @@ function ProcessRegisterPage(req, res, next) {
 exports.ProcessRegisterPage = ProcessRegisterPage;
 function ProcessLogoutPage(req, res, next) {
     req.logOut();
-    res.redirect('login');
+    res.redirect('/login');
 }
 exports.ProcessLogoutPage = ProcessLogoutPage;
 //# sourceMappingURL=auth.js.map

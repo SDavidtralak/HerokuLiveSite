@@ -47,7 +47,7 @@ exports.AuthGuard = AuthGuard;
 function GenerateToken(user) {
     const payload = {
         id: user._id,
-        DisplaName: user.DisplayName,
+        DisplayName: user.DisplayName,
         EmailAddress: user.EmailAddress,
         username: user.username
     };

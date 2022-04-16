@@ -3,21 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProcessEditPage = exports.ProcessAddPage = exports.ProcessDelete = exports.DisplayEditPage = exports.DisplayAddPage = exports.DisplayContactList = void 0;
+exports.ProcessDeletePage = exports.ProcessEditPage = exports.ProcessAddPage = exports.DisplayEditPage = exports.DisplayAddPage = exports.DisplayContactListPage = void 0;
 const contact_1 = __importDefault(require("../Models/contact"));
 const index_1 = require("../Util/index");
-function DisplayContactList(req, res, next) {
+function DisplayContactListPage(req, res, next) {
     contact_1.default.find(function (err, contactList) {
         if (err) {
             console.error("Error Encountered: " + err.message);
             res.end();
         }
-        res.render('index', { title: 'Contact List', page: 'contact-list', contacts: contactList, displayName: index_1.UserDisplayName });
+        res.render('index', { title: 'Contact List', page: 'contact-list', contacts: contactList, displayName: (0, index_1.UserDisplayName)(req) });
     });
 }
-exports.DisplayContactList = DisplayContactList;
+exports.DisplayContactListPage = DisplayContactListPage;
 function DisplayAddPage(req, res, next) {
-    res.render('index', { title: 'Add', page: 'edit', contact: '', displayName: index_1.UserDisplayName });
+    res.render('index', { title: 'Add', page: 'edit', contact: '', displayName: (0, index_1.UserDisplayName)(req) });
 }
 exports.DisplayAddPage = DisplayAddPage;
 function DisplayEditPage(req, res, next) {
@@ -27,21 +27,10 @@ function DisplayEditPage(req, res, next) {
             console.error(err);
             res.end(err);
         }
-        res.render('index', { title: 'Edit', page: 'edit', contact: contactToEdit, displayName: index_1.UserDisplayName });
+        res.render('index', { title: 'Edit', page: 'edit', contact: contactToEdit, displayName: (0, index_1.UserDisplayName)(req) });
     });
 }
 exports.DisplayEditPage = DisplayEditPage;
-function ProcessDelete(req, res, next) {
-    let id = req.params.id;
-    contact_1.default.remove({ _id: id }, function (err) {
-        if (err) {
-            console.error(err);
-            res.end(err);
-        }
-        res.redirect('/contact-list');
-    });
-}
-exports.ProcessDelete = ProcessDelete;
 function ProcessAddPage(req, res, next) {
     let newContact = new contact_1.default({
         "FullName": req.body.fullName,
@@ -74,4 +63,15 @@ function ProcessEditPage(req, res, next) {
     });
 }
 exports.ProcessEditPage = ProcessEditPage;
+function ProcessDeletePage(req, res, next) {
+    let id = req.params.id;
+    contact_1.default.remove({ _id: id }, function (err) {
+        if (err) {
+            console.error(err);
+            res.end(err);
+        }
+        res.redirect('/contact-list');
+    });
+}
+exports.ProcessDeletePage = ProcessDeletePage;
 //# sourceMappingURL=contact-list.js.map

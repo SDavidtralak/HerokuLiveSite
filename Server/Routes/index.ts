@@ -1,9 +1,10 @@
 import express from 'express';
 const router = express.Router();
 
-import {DisplayContactsPage, DisplayHomePage, DisplayAboutPage, DisplayServicePage, DisplayProductPage} from '../Controllers/index'
+// controller instance
+import { DisplayAboutPage, DisplayContactPage, DisplayHomePage, DisplayProductsPage, DisplayServicesPage } from '../Controllers/index';
 
-//top level routes
+/**************************************TOP LEVEL ROUTES ********************************/
 /* GET home page. */
 router.get('/', DisplayHomePage);
 
@@ -14,15 +15,12 @@ router.get('/home', DisplayHomePage);
 router.get('/about', DisplayAboutPage);
 
 /* GET services page. */
-router.get('/services', DisplayServicePage);
+router.get('/services', DisplayServicesPage);
 
 /* GET products page. */
-router.get('/products', DisplayProductPage);
+router.get('/products', DisplayProductsPage);
 
-/* GET products page. */
-router.get('/contact', DisplayContactsPage);
-
-
-
+/* GET contact page. */
+router.get('/contact', DisplayContactPage);
 
 export default router;

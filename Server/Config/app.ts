@@ -14,22 +14,19 @@ import passport from 'passport'; // authentication middleware
 import passportLocal from 'passport-local'; // authentication strategy (username / password)
 import flash from 'connect-flash'; // auth messaging and error management
 
-//module for jwt
+// modules for JWT support
 import cors from 'cors';
 import passportJWT from 'passport-jwt';
 
-//jwt aliases
-let JWTstrategy = passportJWT.Strategy;
+// define JWT aliases
+let JWTStrategy = passportJWT.Strategy;
 let ExtractJWT = passportJWT.ExtractJwt;
-
-
 
 // authentication objects
 let localStrategy = passportLocal.Strategy; // alias
 
 // import a user Model
 import User from '../Models/user';
-
 
 // App configuration
 
@@ -66,9 +63,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../../Client')));
 app.use(express.static(path.join(__dirname, '../../node_modules')));
 
-//setup cors
+// setup cors
 app.use(cors());
-
 
 // setup express session
 app.use(session({
@@ -90,24 +86,25 @@ passport.use(User.createStrategy());
 // serialize and deserialize user data
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-//jwt options
+
+// JWT Options
 let jwtOptions = 
 {
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
   secretOrKey: DBConfig.SessionSecret
 }
 
-// jwt strat config
-let strategy = new JWTstrategy(jwtOptions, function(jwt_payload, done)
+// JWT Strategy configuration
+let strategy = new JWTStrategy(jwtOptions, function(jwt_payload, done)
 {
   User.findById(jwt_payload.id)
-  .then(user => {
-    return done(null, user);
-  })
-  .catch(err => {
-    return done(err, false);
-  });
-})
+    .then(user => {
+      return done(null, user);
+    })
+    .catch(err => {
+      return done(err, false);
+    });
+});
 
 passport.use(strategy);
 
@@ -129,7 +126,7 @@ app.use(function(err: createError.HttpError, req: express.Request, res: express.
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   let message = err.message;
-  let error =  err ;
+  let error = err;
 
   // render the error page
   res.status(err.status || 500);

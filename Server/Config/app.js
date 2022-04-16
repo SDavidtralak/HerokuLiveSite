@@ -38,7 +38,7 @@ const passport_local_1 = __importDefault(require("passport-local"));
 const connect_flash_1 = __importDefault(require("connect-flash"));
 const cors_1 = __importDefault(require("cors"));
 const passport_jwt_1 = __importDefault(require("passport-jwt"));
-let JWTstrategy = passport_jwt_1.default.Strategy;
+let JWTStrategy = passport_jwt_1.default.Strategy;
 let ExtractJWT = passport_jwt_1.default.ExtractJwt;
 let localStrategy = passport_local_1.default.Strategy;
 const user_1 = __importDefault(require("../Models/user"));
@@ -79,7 +79,7 @@ let jwtOptions = {
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: DBConfig.SessionSecret
 };
-let strategy = new JWTstrategy(jwtOptions, function (jwt_payload, done) {
+let strategy = new JWTStrategy(jwtOptions, function (jwt_payload, done) {
     user_1.default.findById(jwt_payload.id)
         .then(user => {
         return done(null, user);
