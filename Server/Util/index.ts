@@ -1,6 +1,6 @@
 import express, {Request, Response, NextFunction } from 'express';
 
-// enable jwt
+//enable jwt
 import jwt from 'jsonwebtoken';
 import * as DBConfig from '../Config/db';
 
@@ -8,13 +8,13 @@ export function UserDisplayName(req: Request): string
 {
     if(req.user)
     {
-        let user = req.user as UserDocument;
-        return user.DisplayName.toString();
+    let user = req.user as UserDocument;
+    return user.DisplayName.toString();
     }
     return '';
 }
 
-export function AuthGuard(req: Request, res: Response, next: NextFunction): void
+export function AuthGuard(req: Request, res: Response, next: NextFunction) : void
 {
     if(!req.isAuthenticated())
     {
@@ -23,19 +23,18 @@ export function AuthGuard(req: Request, res: Response, next: NextFunction): void
     next();
 }
 
-export function GenerateToken(user: UserDocument): string
+export function GenerateToken(user: UserDocument) : String
 {
-    const payload =
-    {
+    const payload = {
         id: user._id,
-        DisplayName: user.DisplayName,
+        DisplaName: user.DisplayName,
         EmailAddress: user.EmailAddress,
         username: user.username
     }
 
-    const jwtOptions =
+    const jwtOptions = 
     {
-        expiresIn: 604800 // 1 week
+        expiresIn: 604800
     }
 
     return jwt.sign(payload, DBConfig.SessionSecret, jwtOptions);

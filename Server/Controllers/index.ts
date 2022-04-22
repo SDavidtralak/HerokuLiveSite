@@ -1,28 +1,23 @@
-import express, {Request, Response, NextFunction } from 'express';
+import express, {Request, Response, NextFunction} from "express";
+import { UserDisplayName} from '../Util/index';
 
-import { UserDisplayName } from '../Util/index';
-
-export function DisplayHomePage(req: Request, res: Response, next: NextFunction): void
+export function DisplayHomePage(req: Request, res: Response, next: NextFunction)
 {
-    res.render('index', { title: 'Home', page: 'home', displayName: UserDisplayName(req) });
+    res.render('index', { title: 'Home', page: 'home', displayName: UserDisplayName });
 }
-
-export function DisplayAboutPage(req: Request, res: Response, next: NextFunction): void
+export function DisplayAboutPage(req: Request, res: Response, next: NextFunction)
 {
-    res.render('index', { title: 'About Us', page: 'about', displayName: UserDisplayName(req) });
+    res.render('index', { title: 'About Us', page: 'about', displayName:UserDisplayName });
 }
-
-export function DisplayServicesPage(req: Request, res: Response, next: NextFunction): void
+export function DisplayServicePage(req: Request, res: Response, next: NextFunction)
 {
-    res.render('index', { title: 'Our Services', page: 'services', displayName: UserDisplayName(req) });
+    res.render('index', { title: 'Our Services', page: 'services', displayName:UserDisplayName });
 }
-
-export function DisplayProductsPage(req: Request, res: Response, next: NextFunction): void
+export function DisplayProductPage(req: Request, res: Response, next: NextFunction)
 {
-    res.render('index', { title: 'Our Products', page: 'products', displayName: UserDisplayName(req) });
+    res.render('index', { title: 'Our Products', page: 'products', displayName:UserDisplayName });
 }
-
-export function DisplayContactPage(req: Request, res: Response, next: NextFunction): void
+export function DisplayContactsPage(req: Request, res: Response, next: NextFunction)
 {
-    res.render('index', { title: 'Contact Us', page: 'contact', displayName: UserDisplayName(req) });
+    res.render('index', { title: 'Contact Us', page: 'contact', displayName:UserDisplayName });
 }

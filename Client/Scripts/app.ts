@@ -222,12 +222,14 @@
     function DisplayLoginPage(): void
     {
         console.log("Login Page");
+
+       //add validation
     }
 
     function DisplayRegisterPage(): void
     {
         console.log("Register Page");
-        //TODO: Future work - add some validation
+       //add validation
     }
 
     function Display404Page(): void
@@ -241,6 +243,8 @@
         console.log("App Started!!");
 
         let page_id = $("body")[0].getAttribute("id");
+
+
 
         switch(page_id)
         {
